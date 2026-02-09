@@ -1,0 +1,553 @@
+:root {
+    --bg-color: #fce4ec;
+    /* Light Pink */
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --primary-color: #ec407a;
+    /* Pink 400 */
+    --secondary-color: #880e4f;
+    /* Pink 900 */
+    --teddy-brown: #d7ccc8;
+    /* Light brown/beige */
+    --teddy-dark: #8d6e63;
+    /* Darker brown */
+    --font-heading: 'Pacifico', cursive;
+    --font-body: 'Fredoka', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    /* Prevent text selection during dragging */
+}
+
+body {
+    background: var(--bg-color);
+    background-image: radial-gradient(#f8bbd0 1px, transparent 1px);
+    background-size: 20px 20px;
+    font-family: var(--font-body);
+    overflow: hidden;
+    /* Prevent scrolling for the app feel */
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Intro Overlay */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(252, 228, 236, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 1s ease-out;
+}
+
+.intro-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.message-card {
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(136, 14, 79, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    border: 2px solid #fff;
+}
+
+.title {
+    font-family: var(--font-heading);
+    color: var(--secondary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    animation: bounceIn 1s ease;
+}
+
+.message-text {
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    min-height: 80px;
+}
+
+.btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(236, 64, 122, 0.3);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(236, 64, 122, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+    padding: 10px 24px;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Teddy Zone */
+#teddy-zone {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Controls */
+#controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    animation-delay: 2s;
+    /* Wait for first teddy */
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.controls-label {
+    margin-bottom: 5px;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* Teddy CSS Art */
+/* Teddy CSS Art */
+.teddy-bear,
+.bunny-toy,
+.panda-toy {
+    position: absolute;
+    width: 200px;
+    height: 280px;
+    cursor: grab;
+    transition: transform 0.1s;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.15));
+}
+
+.teddy-bear:active,
+.bunny-toy:active,
+.panda-toy:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+}
+
+.teddy-part {
+    position: absolute;
+    background: var(--teddy-brown);
+    border-radius: 50%;
+    opacity: 0;
+    /* For animation */
+    transition: opacity 0.5s ease;
+}
+
+.teddy-part.visible {
+    opacity: 1;
+}
+
+/* Body Parts */
+.ear-l {
+    width: 50px;
+    height: 50px;
+    top: 10px;
+    left: 10px;
+    background: var(--teddy-dark);
+}
+
+.ear-r {
+    width: 50px;
+    height: 50px;
+    top: 10px;
+    right: 10px;
+    background: var(--teddy-dark);
+}
+
+.ear-inner {
+    width: 30px;
+    height: 30px;
+    background: var(--teddy-brown);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.head {
+    width: 120px;
+    height: 110px;
+    top: 30px;
+    left: 40px;
+    z-index: 2;
+    background: var(--teddy-brown);
+}
+
+.face-area {
+    width: 70px;
+    height: 50px;
+    background: #efebe9;
+    /* lighter snout */
+    top: 50px;
+    left: 25px;
+    position: absolute;
+    border-radius: 40%;
+}
+
+.eye-l {
+    width: 12px;
+    height: 12px;
+    background: #333;
+    top: 35px;
+    left: 30px;
+    position: absolute;
+    border-radius: 50%;
+    animation: blink 4s infinite;
+}
+
+.eye-r {
+    width: 12px;
+    height: 12px;
+    background: #333;
+    top: 35px;
+    right: 30px;
+    position: absolute;
+    border-radius: 50%;
+    animation: blink 4s infinite 0.5s;
+}
+
+.nose {
+    width: 20px;
+    height: 14px;
+    background: #4e342e;
+    top: 60px;
+    /* Moved down to snout */
+    left: 50px;
+    /* Centered relative to head 120w (50+10=60) */
+    position: absolute;
+    border-radius: 40%;
+}
+
+.mouth {
+    width: 24px;
+    height: 12px;
+    border-bottom: 4px solid #4e342e;
+    position: absolute;
+    top: 75px;
+    /* Below nose */
+    left: 48px;
+    /* Centered (60 - 12 = 48) */
+    border-radius: 0 0 20px 20px;
+}
+
+/* Happy Cheeks */
+.cheek-l,
+.cheek-r {
+    width: 14px;
+    height: 8px;
+    background: #ff8a80;
+    border-radius: 50%;
+    top: 50px;
+    /* Below eyes */
+    position: absolute;
+    opacity: 0.4;
+    filter: blur(1px);
+}
+
+.cheek-l {
+    left: 15px;
+}
+
+.cheek-r {
+    right: 15px;
+}
+
+/* Panda Specifics */
+.panda-toy .head,
+.panda-toy .body,
+.panda-toy .ear-inner {
+    background: #ffffff;
+}
+
+.panda-toy .ear-l,
+.panda-toy .ear-r,
+.panda-toy .leg-l,
+.panda-toy .leg-r,
+.panda-toy .arm-l,
+.panda-toy .arm-r {
+    background: #212121;
+}
+
+.panda-toy .face-area {
+    background: #ffffff;
+}
+
+.panda-toy .eye-patch {
+    width: 24px;
+    height: 20px;
+    background: #212121;
+    border-radius: 50%;
+    position: absolute;
+    top: 32px;
+    opacity: 1;
+    transform: rotate(-10deg);
+}
+
+.panda-toy .eye-patch.left {
+    left: 24px;
+    transform: rotate(10deg);
+}
+
+.panda-toy .eye-patch.right {
+    right: 24px;
+    transform: rotate(-10deg);
+}
+
+.panda-toy .nose {
+    background: #000;
+}
+
+.panda-toy .mouth {
+    border-bottom-color: #000;
+}
+
+/* Bunny Specifics */
+.bunny-toy {
+    --bunny-color: #fff9c4;
+    --bunny-dark: #ffe0b2;
+}
+
+/* Cream color */
+.bunny-toy .head,
+.bunny-toy .body {
+    background: var(--bunny-color);
+}
+
+.bunny-toy .ear-l,
+.bunny-toy .ear-r {
+    width: 26px;
+    height: 80px;
+    top: -50px;
+    background: var(--bunny-color);
+    border-radius: 20px 20px 0 0;
+}
+
+.bunny-toy .ear-l {
+    left: 20px;
+    transform: rotate(-10deg);
+}
+
+.bunny-toy .ear-r {
+    right: 20px;
+    transform: rotate(10deg);
+}
+
+.bunny-toy .ear-inner {
+    width: 14px;
+    height: 60px;
+    top: 10px;
+    left: 6px;
+    background: #ffcdd2;
+    /* Pink inside */
+    border-radius: 10px 10px 0 0;
+}
+
+.bunny-toy .face-area,
+.bunny-toy .belly,
+.bunny-toy .paw {
+    background: #fffbe6;
+}
+
+.bunny-toy .arm-l,
+.bunny-toy .arm-r,
+.bunny-toy .leg-l,
+.bunny-toy .leg-r {
+    background: var(--bunny-dark);
+}
+
+
+.body {
+    width: 140px;
+    height: 130px;
+    top: 100px;
+    left: 30px;
+    z-index: 1;
+    background: var(--teddy-brown);
+    border-radius: 45%;
+}
+
+.belly {
+    width: 80px;
+    height: 70px;
+    background: #efebe9;
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.arm-l {
+    width: 50px;
+    height: 70px;
+    top: 110px;
+    left: 0px;
+    z-index: 2;
+    background: var(--teddy-dark);
+    border-radius: 50px 50px 50px 50px;
+    transform: rotate(20deg);
+}
+
+.arm-r {
+    width: 50px;
+    height: 70px;
+    top: 110px;
+    right: 0px;
+    z-index: 2;
+    background: var(--teddy-dark);
+    border-radius: 50px 50px 50px 50px;
+    transform: rotate(-20deg);
+}
+
+.leg-l {
+    width: 55px;
+    height: 70px;
+    top: 190px;
+    left: 30px;
+    z-index: 0;
+    background: var(--teddy-dark);
+    border-radius: 30px 30px 50px 50px;
+}
+
+.leg-r {
+    width: 55px;
+    height: 70px;
+    top: 190px;
+    right: 30px;
+    z-index: 0;
+    background: var(--teddy-dark);
+    border-radius: 30px 30px 50px 50px;
+}
+
+.paw {
+    width: 30px;
+    height: 30px;
+    background: #efebe9;
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+/* Animations */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    70% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+
+    0%,
+    96%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    98% {
+        transform: scaleY(0.1);
+    }
+}
+
+@keyframes popUp {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    80% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
